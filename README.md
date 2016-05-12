@@ -44,7 +44,7 @@ port = "/dev/ttyUSB0"
 
 ### Optional
 ### Tmote Setup
-To setup the Tmote receiver, make sure to [program the Tmote-Skys][tmote] and check they are receiving broadcasts.
+To setup the Tmote receiver, make sure to [program the Tmote-Skys][tmote-tutorial] and check they are receiving broadcasts.
 Plug in the Tmote-Sky. Check what port it is connected to using `dmesg | grep tty`. Then, open `localization/measure_rssi.py` and change port variable accordingly.
 
 ### Estimote Setup
@@ -103,3 +103,4 @@ $ sudo python mapping/mapping.py
 [turtle]: https://docs.python.org/2/library/turtle.html
 [pip-url]: https://pip.pypa.io/en/stable/installing/
 [ios-app]: https://github.com/DougMHu/roomba-estimotes-localization
+[tmote-tutorial]: https://github.com/DougMHu/contiki/tree/ee579
