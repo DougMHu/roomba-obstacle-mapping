@@ -31,6 +31,9 @@ except ImportError:
 		sys.path.insert(0, cmd_subfolder)
 	import paho.mqtt.client as mqtt
 
+host_name = "iot.eclipse.org"
+topic_name = "MQTTEstimote"
+
 def on_connect(mqttc, obj, flags, rc):
 	print("rc: "+str(rc))
 
@@ -58,8 +61,8 @@ mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
 # Uncomment to enable debug messages
 #mqttc.on_log = on_log
-mqttc.connect("iot.eclipse.org", 1883, 60)
-mqttc.subscribe("MQTTExample/LED", 0)
+mqttc.connect(host_name, 1883, 60)
+mqttc.subscribe(topic_name, 0)
 #mqttc.subscribe("WigWag/Roomba/", 0)
 #mqttc.publish("WigWag/Roomba/", "yoyo")
 

@@ -33,8 +33,12 @@ except ImportError:
 		sys.path.insert(0, cmd_subfolder)
 	import paho.mqtt.client as mqtt
 
+host_name = "iot.eclipse.org"
+topic_name = "MQTTEstimote"
+
 class mqtt_sampler(object):
 	def __init__(self):
+		global host_name, topic_name
 		self.samples = []
 
 		# If you want to use a specific client id, use
@@ -48,9 +52,9 @@ class mqtt_sampler(object):
 		self.mqttc.on_subscribe = on_subscribe
 		# Uncomment to enable debug messages
 		#mqttc.on_log = on_log
-		self.mqttc.connect("iot.eclipse.org", 1883, 60)
+		self.mqttc.connect(host_name, 1883, 60)
 
-		self.mqttc.subscribe("MQTTEstimote", 0)
+		self.mqttc.subscribe(topic_name, 0)
 		#self.message = ""
 		#mqttc.publish("WigWag/Roomba/", "yoyo")
 

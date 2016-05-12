@@ -18,6 +18,8 @@ import time
 import serial
 import json
 
+port = "/dev/ttyUSB0"
+
 def update_tables(tmotes, tmote_ID, rssi):
 	"""	Input:	current dictionary of tmotes,
 				received tmote_ID
@@ -88,6 +90,7 @@ def parse_packet(line):
 
 def sample_RSSI(sample_interval, tmotes={}):
 	"""Returns tmotes dictionary"""
+	global port
 	# Store dictionary of Tmote IDs
 	#tmotes = {}
 
@@ -100,7 +103,7 @@ def sample_RSSI(sample_interval, tmotes={}):
 			break
 
 		# read from Tmote serial output
-		with open('/dev/ttyUSB0','r') as f:
+		with open(port,'r') as f:
 			lines = f.read()
 		print lines
 
