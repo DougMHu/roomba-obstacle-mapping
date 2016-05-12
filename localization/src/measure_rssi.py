@@ -86,10 +86,10 @@ def parse_packet(line):
 #ser.parity = serial.PARITY_NONE
 #ser.close()
 
-def sample_RSSI(sample_interval):
+def sample_RSSI(sample_interval, tmotes={}):
 	"""Returns tmotes dictionary"""
 	# Store dictionary of Tmote IDs
-	tmotes = {}
+	#tmotes = {}
 
 	# Set timeout for how long to take samples
 	timeout = time.time() + sample_interval
@@ -193,10 +193,10 @@ def main(sample_time):
 
 if __name__ == "__main__":
 	# logfile name
-	logFile = "../location_experiments/Dougs_apt/test_3_3.json"
+	logFile = "../location_experiments/garbage.json"
 
 	# sampling duration
-	sample_time = 120
+	sample_time = 5
 
 	print
 	locations = main(sample_time)
@@ -209,3 +209,9 @@ if __name__ == "__main__":
 	with open(logFile, "r") as f: 
 		dictionary = json.load(f)
 		print dictionary
+
+	# test appending to sample list
+	# tmotes = sample_RSSI(sample_time)
+	# print "tmotes = ", tmotes
+	# tmotes = sample_RSSI(sample_time, tmotes)
+	# print "tmotes = ", tmotes

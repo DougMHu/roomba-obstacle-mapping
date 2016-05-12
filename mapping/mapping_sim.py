@@ -1,13 +1,21 @@
 import numpy
 import Queue
-import turtle_roomba as rb
+import os
+import inspect
+import sys
 import time
+
+include_paths = ["../visualization"]
+for path in include_paths:
+	cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile( inspect.currentframe() ))[0],path)))
+	sys.path.insert(0, cmd_subfolder)
+import turtle_roomba as rb
 
 # inputs: room length, room width, step distance (mm)
 # output: grid with marked obstacles
 
 # Example room
-length = 4000
+length = 4500
 width = 4000
 step = 500
 
@@ -23,30 +31,38 @@ path = []
 
 # Simulate this obstacle map
 input_obstacle = numpy.zeros((len(xs),len(ys)))
+input_obstacle[1][3]=1
+input_obstacle[1][4]=1
+input_obstacle[2][3]=1
+input_obstacle[2][4]=1
+
+# input_obstacle[0][3]=1
+# input_obstacle[0][4]=1
 # input_obstacle[1][3]=1
 # input_obstacle[1][4]=1
-# input_obstacle[2][3]=1
-# input_obstacle[2][4]=1
+# input_obstacle[0][7]=1
+# input_obstacle[1][7]=1
+
 # input_obstacle[4][3]=1
 # input_obstacle[4][4]=1
 # input_obstacle[5][3]=1
 # input_obstacle[5][4]=1
 
-input_obstacle[1][5]=1
-input_obstacle[1][6]=1
-input_obstacle[2][5]=1
-input_obstacle[2][6]=1
-input_obstacle[4][1]=1
-input_obstacle[4][2]=1
-input_obstacle[5][1]=1
-input_obstacle[5][2]=1
-input_obstacle[6][1]=1
-input_obstacle[6][2]=1
-input_obstacle[7][1]=1
-input_obstacle[7][2]=1
+# input_obstacle[1][5]=1
+# input_obstacle[1][6]=1
+# input_obstacle[2][5]=1
+# input_obstacle[2][6]=1
+# input_obstacle[4][1]=1
+# input_obstacle[4][2]=1
+# input_obstacle[5][1]=1
+# input_obstacle[5][2]=1
+# input_obstacle[6][1]=1
+# input_obstacle[6][2]=1
+# input_obstacle[7][1]=1
+# input_obstacle[7][2]=1
 
 # Instantiate a roomba
-roomba = rb.CuteTurtle(length*0.001, width*0.001, step*0.001, input_obstacle)
+roomba = rb.CuteTurtle(width*0.001, length*0.001, step*0.001, input_obstacle)
 
 def bfs( dest ):
 	global path

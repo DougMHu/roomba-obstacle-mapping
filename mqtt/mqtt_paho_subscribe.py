@@ -18,9 +18,9 @@
 
 import sys
 import time
+import numpy
 try:
 	import paho.mqtt.client as mqtt
-	print "imported"
 except ImportError:
 	# This part is only required to run the example from within the examples
 	# directory when the module itself is not installed.
@@ -50,21 +50,22 @@ class mqtt_sampler(object):
 		#mqttc.on_log = on_log
 		self.mqttc.connect("iot.eclipse.org", 1883, 60)
 
-		self.mqttc.subscribe("MQTTExample/LED", 0)
+		self.mqttc.subscribe("MQTTEstimote", 0)
 		#self.message = ""
 		#mqttc.publish("WigWag/Roomba/", "yoyo")
 
 		self.mqttc.loop_start()
 
 	def take_sample(self):
-		#self.mqttc.loop_start()
-		#time.sleep(1)
-		#self.mqttc.loop_stop(force=False)
+		sample_time = 10
+		self.mqttc.loop_start()
+		time.sleep(sample_time)
+		self.mqttc.loop_stop(force=False)
 		# parse message for x and y
-		pass
-
-		self.message = self.parse(self.message)
-		self.samples.append(self.message)
+		#pass
+		print "message = ", self.message
+		xy = self.parse(self.message)
+		self.samples.append(numpy.array(xy))
 
 	def get_samples(self):
 		self.mqttc.loop_stop(force=False)
@@ -74,10 +75,10 @@ class mqtt_sampler(object):
 		print("rc: "+str(rc))
 
 	def on_message(self, mqttc, obj, msg):
-		print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
+		#print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
 		self.message = msg.payload
-		self.message = self.parse(self.message)
-		self.samples.append(self.message)
+		#self.message = self.parse(self.message)
+		#self.samples.append(self.message)
 
 	def on_publish(self, mqttc, obj, mid):
 		print("mid: "+str(mid))
@@ -89,11 +90,13 @@ class mqtt_sampler(object):
 	def on_log(self, mqttc, obj, level, string):
 		#parse
 		#append(location)
-		print "message: ", string
+		#print "message: ", string
 		print(string)
 
 	def parse(self, message):
 		s=message
+		#print "s.split(,) = ", s.split(",")
+		#print "s.split(,)[0].split(:) = ", s.split(",")[0].split(":")
 		x = float(s.split(",")[0].split(":")[1])
 		y = float(s.split(",")[1].split(":")[1])
 		#s = s.split(",")

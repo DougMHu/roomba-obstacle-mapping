@@ -8,6 +8,33 @@ import numpy
 import json
 import measure_rssi as measure
 import analyze_calibration as analyze
+import time
+
+# Output file names
+outfile1 = "/home/douglamh/Documents/final_project/localization/location_experiments/Dougs_apt/measure_test_1_1.json"
+outfile2 = "/home/douglamh/Documents/final_project/localization/location_experiments/Dougs_apt/trilaterate_test_1_1.json"
+
+# Define the boundaries of the room
+xlim = (0,3.8)
+ylim = (0,4.8)
+
+# Take RSSI measurements
+tmote_loc = { "(100,0)": (0,0),	
+		  	  "(5,171)": (3.8,4.8),
+		  	  "(2,0)": (0,4.8),
+		  	  "(6,242)": (3.8,0)
+			}
+
+# Input calibration files
+tmote_file1 = { "(100,0)": "/home/douglamh/Documents/final_project/localization/calibrate_samples/Dougs_apt/ID_100_0/1m.json",
+			  	"(5,171)": "/home/douglamh/Documents/final_project/localization/calibrate_samples/Dougs_apt/ID_5_171/1m.json",
+			  	"(2,0)": "/home/douglamh/Documents/final_project/localization/calibrate_samples/Dougs_apt/ID_2_0/1m.json",
+			  	"(6,242)": "/home/douglamh/Documents/final_project/localization/calibrate_samples/Dougs_apt/ID_6_242/1m.json"
+			  }
+tmote_file2 = { "(100,0)": "/home/douglamh/Documents/final_project/localization/calibrate_samples/Dougs_apt/ID_100_0/4m.json",
+			  	"(5,171)": "/home/douglamh/Documents/final_project/localization/calibrate_samples/Dougs_apt/ID_5_171/4m.json",
+			  	"(2,0)": "/home/douglamh/Documents/final_project/localization/calibrate_samples/Dougs_apt/ID_2_0/4m.json",
+			  	"(6,242)": "/home/douglamh/Documents/final_project/localization/calibrate_samples/Dougs_apt/ID_6_242/4m.json" }
 
 def calc_r_sq(i_j,loc):
 	""" i_j: list with x y
@@ -51,8 +78,8 @@ def calc_xy(xlimits,ylimits,d1,d2,loc1,loc2):
 	#print "minSE = ",minSE, " at ",min_ij
 	return (min_ij, minSE)
 
-def main():
-	print
+def trilaterate(tmotes):
+	print "tmotes = ", tmotes
 	## Test calc_xy for edge cases:
 	## d1 and d2 don't intersect
 	#print "Edge case: don't intersect"
@@ -85,55 +112,24 @@ def main():
 	# 						 }
 	# 		 }
 
-	# Define the boundaries of the room
-	xlimits = (0,3.8)
-	ylimits = (0,4.8)
-
-	# Take RSSI measurements
-	tmote_loc = { "(100,0)": (0,0),	
-			  	  "(5,171)": (3.8,4.8),
-			  	  "(2,0)": (0,4.8),
-			  	  "(6,242)": (3.8,0)
-				}
+	global xlim, ylim, tmote_loc, tmote_file1, tmote_file2, outfile1, outfile2
 
 	# Hardcode locations of Tmotes and write to file:
-	sample_time = 60
-	tmotes = measure.sample_RSSI(sample_time)
 	for ID in tmote_loc:
 		if ID in tmotes:
 			tmotes[ID]["loc"] = tmote_loc[ID]
-	# with open(outfile, "w") as f:
-	# 	json.dump(tmotes, f)
+	with open(outfile1, "w") as f:
+		json.dump(tmotes, f)
 
-	# Convert median RSSI measurements to estimated distances using the Model
-	# input: calibration measurements from 2 distances
-	# file1 = ["../calibrate_samples/ID_100_0/1m.json", "../calibrate_samples/ID_131_215/1m.json",
-	# 		 "../calibrate_samples/ID_251_122/1m.json", "../calibrate_samples/ID_2_0/1m.json"]
-	# file2 = ["../calibrate_samples/ID_100_0/4m.json", "../calibrate_samples/ID_131_215/4m.json",
-	# 		 "../calibrate_samples/ID_251_122/4m.json", "../calibrate_samples/ID_2_0/4m.json"]
-	tmote_file1 = { "(100,0)": "../calibrate_samples/Dougs_apt/ID_100_0/1m.json",
-				  	"(5,171)": "../calibrate_samples/Dougs_apt/ID_5_171/1m.json",
-				  	"(2,0)": "../calibrate_samples/Dougs_apt/ID_2_0/1m.json",
-				  	"(6,242)": "../calibrate_samples/Dougs_apt/ID_6_242/1m.json"
-				  }
-	tmote_file2 = { "(100,0)": "../calibrate_samples/Dougs_apt/ID_100_0/4m.json",
-				  	"(5,171)": "../calibrate_samples/Dougs_apt/ID_5_171/4m.json",
-				  	"(2,0)": "../calibrate_samples/Dougs_apt/ID_2_0/4m.json",
-				  	"(6,242)": "../calibrate_samples/Dougs_apt/ID_6_242/4m.json" }
+	# Extract input calibration files
 	tmote_calib1 = {}
 	tmote_calib2 = {}
 	for ID in tmote_file1:
 		tmote_calib1[ID] = analyze.extract_json(tmote_file1[ID])
 	for ID in tmote_file2:
 		tmote_calib2[ID] = analyze.extract_json(tmote_file2[ID])
-	# extract1_list = [analyze.extract_json(infile) for infile in file1]
-	# extract2_list = [analyze.extract_json(infile) for infile in file2]
-	# dist1 = [x[0] for x in extract1_list]
-	# rssi1_list = [x[1] for x in extract1_list]
-	# dist2 = [x[0] for x in extract2_list]
-	# rssi2_list = [x[1] for x in extract2_list]
 
-	# Estimate distances
+	# Convert median RSSI measurements to estimated distances using the Model
 	tmote_set = set(tmotes)
 	tmote_loc_set = set(tmote_loc)
 	aliens = tmote_set - tmote_loc_set
@@ -161,17 +157,16 @@ def main():
 			d2 = tmotes[remaining_ID]["dist"]
 			loc1 = tmotes[current_ID]["loc"]
 			loc2 = tmotes[remaining_ID]["loc"]
-			((x,y),minSE) = calc_xy(xlimits,ylimits,d1,d2,loc1,loc2)
+			((x,y),minSE) = calc_xy(xlim,ylim,d1,d2,loc1,loc2)
 			print "minSE = ", minSE
 			locations.append(numpy.array([x,y]))
 	print
 	print "location solutions = ", locations
 	print
 
+	# Average over all locations
 	xs = [elem[0] for elem in locations]
 	ys = [elem[1] for elem in locations]
-
-	# Average over all locations
 	x ,y = sum(locations)/len(locations)
 	print "estimated location = ", (x,y)
 	print
@@ -181,12 +176,33 @@ def main():
 	print
 
 	# Write to file
-	outfile = "../location_experiments/Dougs_apt/rotate_test_1_1.json"
-	with open(outfile, "w") as f: 
+	with open(outfile2, "w") as f: 
+		locations = [elem.tolist() for elem in locations]
 		json.dump(locations, f)
 
 	return (x,y)
 
+class Tmote_Sampler(object):
+
+	def __init__(self, roomba):
+		self.roomba = roomba
+		self.samples = []
+
+	def take_sample(self):
+		angle = 95
+		sample_time = 5
+		tmotes = measure.sample_RSSI(sample_time)
+		self.roomba.rotate(angle,200)
+		for i in range(3):
+			tmotes = measure.sample_RSSI(sample_time, tmotes)
+			self.roomba.rotate(angle,200)
+		self.samples.append(trilaterate(tmotes))
+		time.sleep(sample_time)
+
+	def get_samples(self):
+		return self.samples
+
 if __name__ == '__main__':
-	main()
+	tmotes = measure.sample_RSSI(5)
+	trilaterate(tmotes)
 

@@ -1,17 +1,47 @@
 import numpy
 import Queue
-import roomba as rb
 import time
-import mqtt_paho_subscribe
 import json
+import os
+import inspect
+import sys
 
-# inputs: room length, room width, step distance (mm)
+include_paths = ["../roomba"]
+for path in include_paths:
+	cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile( inspect.currentframe() ))[0],path)))
+	sys.path.insert(0, cmd_subfolder)
+import roomba as rb
+
+# inputs: room length, room width, step distance (mm), filename
 # output: grid with marked obstacles
 
-# Example room
-length = 1000
-width = 3000
+#########################################################
+# INPUTS
+#########################################################
+# Room dimenstions
+length = 1500
+width = 5000
 step = 500
+
+# Sampling Type and File name
+sampling = True
+if (sampling):
+	sampler = "Estimote"	#"Estimote"
+	filename = "samples/Dougs_apt/"+sampler+"/test.json"
+
+# DO NOT MODIFY THIS:
+else:
+	sampler = "None"
+
+#########################################################
+# BEGIN MAPPING SCRIPT...
+#########################################################
+# Choose sampler
+convert = {"Estimote":0, "Tmote":1, "None":None}
+
+# Instantiate a roomba
+roomba = rb.Roomba(length,width,step, 
+	location_sampling=sampling, sampler_type=convert[sampler])
 
 # Roomba starts in the center of a square, so range does not include the endpoint
 xs = numpy.arange(0,length, step)
@@ -22,12 +52,6 @@ processed = numpy.zeros((len(xs),len(ys)))		#to check if locn already visited
 #remove processed if you want to check grid from all sides
 curloc = (0,0)									#current location of Roomba
 path = []
-
-# Instantiate a roomba
-roomba = rb.Roomba(length,width,step, location_sampling=True, sampler_type=0)
-
-# Instantiate a sampler
-#sampler = mqtt_sampler()
 
 def bfs( dest ):
 
@@ -145,15 +169,18 @@ def dfs(start):
 dfs([(0,0),(0,-1)])
 print "final map:\n", discovered
 print "path:\n", path
-print "samples:\n", roomba.get_samples()
+dictionary = {"map":discovered, "path":path}
 
 
 roomba.keep_map_open()
 
 # write path to file
 # write estimote locations to file
-dictionary = {"path": path, "samples": roomba.get_samples()}
-filename = "output1.json"
+if (sampling):
+	print "samples:\n", roomba.get_samples()
+	samples = [elem.tolist() for elem in roomba.get_samples()]
+	dictionary["samples"] = samples
+
 with open(filename, "w") as f:
 	json.dump(dictionary, f)
 #print processed
