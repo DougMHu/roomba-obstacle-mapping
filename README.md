@@ -4,7 +4,7 @@ roomba-obstacle-mapping is a Python library for obstacle mapping using an iRobot
 
 It uses iRobot's [Python API][irobot] for controlling the Create 2. It also uses [Python's Turtle graphics][turtle] for path visualization.
 
-(Optional) An accompanying iOS application for reading location from the Estimotes is available at [roomba-estimotes-localization][ios-app]. Accompanying Tmote broadcast code can be found at [contiki](https://github.com/DougMHu/contiki).
+(Optional) An accompanying iOS application for reading location from the Estimotes is available at [roomba-estimotes-localization][ios-app]. Accompanying Tmote broadcast code can be found at [contiki](https://github.com/DougMHu/contiki/tree/ee579).
 
 ## Ubuntu/OSX Installation Using pip
 
@@ -26,7 +26,7 @@ Then repeat for the following scripts:
 * mapping/mapping.py
 
 ## Hardware Setup
-
+### Create 2 Setup
 Plug in the Create 2. Try running iRobot's Create 2 GUI, following this [tutorial][irobot] if necessary:
 ```
 $ sudo python roomba/Create2_TetheredDrive.py
@@ -42,10 +42,12 @@ Then, open `roomba/roomba.py` and change the port variable accordingly. e.g.
 port = "/dev/ttyUSB0"
 ```
 
-(Optional)
+### Optional
+### Tmote Setup
 To setup the Tmote receiver, make sure to [program the Tmote-Skys][tmote] and check they are receiving broadcasts.
 Plug in the Tmote-Sky. Check what port it is connected to using `dmesg | grep tty`. Then, open `localization/measure_rssi.py` and change port variable accordingly.
 
+### Estimote Setup
 To setup the Estimote receiver, make sure your computer and your phone are connected to WiFi. Before running your iOS App, try:
 ```
 $ python mqtt/mqtt_test.py
@@ -70,6 +72,7 @@ To run standalone Create 2 mapping, open `mapping/mapping.py` and set `sampling 
 $ sudo python mapping/mapping.py
 ```
 
+### Optional
 To run Create 2 mapping accompanied by Estimote sampling or Tmote sampling, open `mapping/mapping.py` and set the configuration variables to:
 ```
 sampling = True

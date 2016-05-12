@@ -13,6 +13,8 @@
 #    Roger Light - initial implementation
 # Copyright (c) 2010,2011 Roger Light <roger@atchoo.org>
 # All rights reserved.
+#
+# MODIFIED THE MQTT TOPIC AND ADDED SAMPLING API FOR ROOMBA LOCATION SAMPLING
 
 # This shows a simple example of an MQTT subscriber.
 
