@@ -1,0 +1,30 @@
+name: roomba
+channels:
+  - defaults
+dependencies:
+  - blas=1.0=mkl
+  - ca-certificates=2021.4.13=haa95532_1
+  - certifi=2020.6.20=pyhd3eb1b0_3
+  - icc_rt=2019.0.0=h0cc432a_1
+  - intel-openmp=2020.2=254
+  - mkl=2020.2=256
+  - mkl-service=2.3.0=py27h0b88c2a_0
+  - mkl_fft=1.0.15=py27h44c1dab_0
+  - numpy=1.16.6=py27hcd21bde_0
+  - numpy-base=1.16.6=py27hb1d0314_0
+  - pip=19.3.1=py27_0
+  - pyserial=2.7=py27_0
+  - python=2.7.18=hfb89ab9_0
+  - scipy=1.2.1=py27h4c3ab11_0
+  - setuptools=44.0.0=py27_0
+  - six=1.15.0=pyhd3eb1b0_0
+  - sqlite=3.30.1=h0c8e037_0
+  - vc=9=h7299396_1
+  - vs2008_runtime=9.00.30729.1=hfaea7d5_1
+  - vs2015_runtime=14.27.29016=h5e58377_2
+  - wheel=0.36.2=pyhd3eb1b0_0
+  - wincertstore=0.2=py27hf04cefb_0
+  - pip:
+    - paho-mqtt==1.5.1
+prefix: C:\Users\dhu\AppData\Local\Continuum\anaconda2\envs\roomba
+

@@ -130,7 +130,7 @@ class CuteTurtle(object):
 			self.t.rt(90)
 			self.t.fd(step_w)
 			self.t.rt(90)
-		if (self.obstacles != None):
+		if (self.obstacles is not None):
 			self.draw_matrix(self.obstacles)
 		self.t.penup()
 		self.t.fd(-roomba_l/2)
