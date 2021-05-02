@@ -1,4 +1,4 @@
-name: roomba
+name: roomba-linux
 channels:
   - defaults
 dependencies:
@@ -22,5 +22,5 @@ dependencies:
     - numpy==1.16.6
     - paho-mqtt==1.5.1
     - scipy==1.2.3
-prefix: /tmp/guest-8zaltr/anaconda2/envs/roomba
+prefix: /tmp/guest-8zaltr/anaconda2/envs/roomba-linux
 

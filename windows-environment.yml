@@ -1,4 +1,4 @@
-name: roomba
+name: roomba-windows
 channels:
   - defaults
 dependencies:
@@ -26,5 +26,5 @@ dependencies:
   - wincertstore=0.2=py27hf04cefb_0
   - pip:
     - paho-mqtt==1.5.1
-prefix: C:\Users\dhu\AppData\Local\Continuum\anaconda2\envs\roomba
+prefix: C:\Users\dhu\AppData\Local\Continuum\anaconda2\envs\roomba-windows
 
